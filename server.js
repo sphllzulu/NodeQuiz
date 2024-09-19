@@ -1,3 +1,5 @@
+
+//server implementation
 // const http = require('http');
 // const url = require('url');
 
@@ -136,8 +138,125 @@
 
 
 
+//readline-sync does not work properly
+// const readline = require('readline-sync');
 
-const readline = require('readline-sync');
+// const questions = [
+//   { question: "What is the name of Harry Potter's godfather?", answer: "sirius black" },
+//   { question: "Which house at Hogwarts was Harry a part of?", answer: "gryffindor" },
+//   { question: "What position does Harry play on the Quidditch team?", answer: "seeker" },
+//   { question: "What magical object did Harry use to breathe underwater?", answer: "gillyweed" },
+//   { question: "What is the name of the three-headed dog guarding the Philosopher's Stone?", answer: "fluffy" },
+// ];
+
+// const timePerQuestion = 10;  
+// const totalQuizTime = 30;    
+// let currentQuestionIndex = 0; 
+// let score = 0;
+// let quizTimer;
+// let questionTimer;
+
+// function clearLine() {
+//   process.stdout.write('\r\x1b[K');
+// }
+
+// // here i am handling the question timer
+// function startQuestionTimer(onTimeout) {
+//   let timeRemaining = timePerQuestion;
+//   questionTimer = setInterval(() => {
+//     clearLine();
+//     process.stdout.write(`Time remaining: ${timeRemaining}s | Your answer: `);
+//     timeRemaining--;
+//     if (timeRemaining < 0) {
+//       clearInterval(questionTimer);
+//       console.log('\nTime\'s up!');
+//       onTimeout(); 
+//     }
+//   }, 1000);
+// }
+
+// // Countdown function for total quiz duration
+// function startQuizTimer() {
+//   let totalTimeRemaining = totalQuizTime;
+//   quizTimer = setInterval(() => {
+//     clearLine();
+//     process.stdout.write(`Total quiz time remaining: ${totalTimeRemaining}s`);
+//     totalTimeRemaining--;
+//     if (totalTimeRemaining < 0) {
+//       clearInterval(quizTimer);
+//       console.log('\nQuiz time is up!');
+//       endQuiz();
+//     }
+//   }, 1000);
+// }
+
+
+// function askQuestion() {
+//   const currentQuestion = questions[currentQuestionIndex];
+//   console.log(`\nQuestion ${currentQuestionIndex + 1}: ${currentQuestion.question}`);
+
+//   let answerGiven = false;
+
+//   // Start timer for the current question
+//   startQuestionTimer(() => {
+//     if (!answerGiven) {
+//       moveToNextQuestion();  // Automatically move to the next question when time's up
+//     }
+//   });
+
+//   const answer = readline.question("Your answer: ");
+//   answerGiven = true;
+//   clearInterval(questionTimer);  // Clear question timer after answer is given
+//   clearLine();
+
+//   // Check the answer
+//   if (answer.trim() === "") {
+//     console.log("No answer provided. Moving to the next question.");
+//   } else if (answer.toLowerCase() === currentQuestion.answer) {
+//     console.log("Correct!");
+//     score++;
+//   } else {
+//     console.log("Wrong answer!");
+//   }
+
+//   moveToNextQuestion();
+// }
+
+// // Function to move to the next question or end the quiz
+// function moveToNextQuestion() {
+//   currentQuestionIndex++;
+//   if (currentQuestionIndex >= questions.length) {
+//     endQuiz();
+//   } else {
+//     setTimeout(askQuestion, 1000);  // Short delay before the next question
+//   }
+// }
+
+// // Function to end the quiz
+// function endQuiz() {
+//   clearInterval(quizTimer);  // Clear the total quiz timer
+//   console.log("\nThe quiz has ended!");
+//   console.log(`Your final score is: ${score}/${questions.length}`);
+//   process.exit();  // Exit the Node.js process
+// }
+
+// // Function to start the quiz
+// function startQuiz() {
+//   console.log("Welcome to the PotterHead Quiz!");
+//   console.log("The entire quiz will end after 30 seconds, regardless of how many questions you answer.");
+//   console.log("Press Enter to start the quiz...");
+//   readline.question();  
+
+//   startQuizTimer();  
+//   askQuestion();    
+// }
+
+// startQuiz();
+
+
+
+
+const readline = require('readline');
 
 const questions = [
   { question: "What is the name of Harry Potter's godfather?", answer: "sirius black" },
@@ -147,18 +266,22 @@ const questions = [
   { question: "What is the name of the three-headed dog guarding the Philosopher's Stone?", answer: "fluffy" },
 ];
 
-const timePerQuestion = 10;  
-const totalQuizTime = 30;    
-let currentQuestionIndex = 0; 
+const timePerQuestion = 10;
+const totalQuizTime = 30;
+let currentQuestionIndex = 0;
 let score = 0;
 let quizTimer;
 let questionTimer;
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 function clearLine() {
   process.stdout.write('\r\x1b[K');
 }
 
-// here i am handling the question timer
 function startQuestionTimer(onTimeout) {
   let timeRemaining = timePerQuestion;
   questionTimer = setInterval(() => {
@@ -168,12 +291,11 @@ function startQuestionTimer(onTimeout) {
     if (timeRemaining < 0) {
       clearInterval(questionTimer);
       console.log('\nTime\'s up!');
-      onTimeout(); 
+      onTimeout();
     }
   }, 1000);
 }
 
-// Countdown function for total quiz duration
 function startQuizTimer() {
   let totalTimeRemaining = totalQuizTime;
   quizTimer = setInterval(() => {
@@ -188,65 +310,60 @@ function startQuizTimer() {
   }, 1000);
 }
 
-
 function askQuestion() {
   const currentQuestion = questions[currentQuestionIndex];
   console.log(`\nQuestion ${currentQuestionIndex + 1}: ${currentQuestion.question}`);
 
   let answerGiven = false;
 
-  // Start timer for the current question
   startQuestionTimer(() => {
     if (!answerGiven) {
-      moveToNextQuestion();  // Automatically move to the next question when time's up
+      rl.removeAllListeners('line');
+      moveToNextQuestion();
     }
   });
 
-  const answer = readline.question("Your answer: ");
-  answerGiven = true;
-  clearInterval(questionTimer);  // Clear question timer after answer is given
-  clearLine();
+  rl.question("Your answer: ", (answer) => {
+    answerGiven = true;
+    clearInterval(questionTimer);
+    clearLine();
 
-  // Check the answer
-  if (answer.trim() === "") {
-    console.log("No answer provided. Moving to the next question.");
-  } else if (answer.toLowerCase() === currentQuestion.answer) {
-    console.log("Correct!");
-    score++;
-  } else {
-    console.log("Wrong answer!");
-  }
+    if (answer.trim() === "") {
+      console.log("No answer provided. Moving to the next question.");
+    } else if (answer.toLowerCase() === currentQuestion.answer) {
+      console.log("Correct!");
+      score++;
+    } else {
+      console.log("Wrong answer!");
+    }
 
-  moveToNextQuestion();
+    moveToNextQuestion();
+  });
 }
 
-// Function to move to the next question or end the quiz
 function moveToNextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex >= questions.length) {
     endQuiz();
   } else {
-    setTimeout(askQuestion, 1000);  // Short delay before the next question
+    setTimeout(askQuestion, 1000);
   }
 }
 
-// Function to end the quiz
 function endQuiz() {
-  clearInterval(quizTimer);  // Clear the total quiz timer
+  clearInterval(quizTimer);
   console.log("\nThe quiz has ended!");
   console.log(`Your final score is: ${score}/${questions.length}`);
-  process.exit();  // Exit the Node.js process
+  rl.close();
 }
 
-// Function to start the quiz
 function startQuiz() {
   console.log("Welcome to the PotterHead Quiz!");
   console.log("The entire quiz will end after 30 seconds, regardless of how many questions you answer.");
-  console.log("Press Enter to start the quiz...");
-  readline.question();  
-
-  startQuizTimer();  
-  askQuestion();    
+  rl.question("Press Enter to start the quiz...", () => {
+    startQuizTimer();
+    askQuestion();
+  });
 }
 
 startQuiz();
