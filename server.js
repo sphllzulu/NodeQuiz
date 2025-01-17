@@ -1,141 +1,4 @@
 
-//server implementation
-// const http = require('http');
-// const url = require('url');
-
-// const questions = [
-//     { question: "What is the name of Harry Potter's godfather?", answer: "Sirius Black" },
-//     { question: "Which house at Hogwarts was Harry a part of?", answer: "Gryffindor" },
-//     { question: "What position does Harry play on the Quiddich team?", answer: "Seeker" },
-//     { question: "What magical object did Harry use to breathe underwater?", answer: "Gillyweed" },
-//     { question: "What is the name of the three-headed dog guarding the Philosopher's Stone?", answer: "Fluffy" },
-// ];
-
-// let currentQuestionIndex = 0;
-// let score = 0;
-// let quizTimer;
-// let questionTimer;
-// let timeRemainingForQuiz = 30; 
-// let timeRemainingForQuestion = 10;
-
-// function resetQuiz() {
-//     currentQuestionIndex = 0;
-//     score = 0;
-//     timeRemainingForQuiz = 30;
-//     timeRemainingForQuestion = 10;
-//     clearInterval(quizTimer);
-//     clearInterval(questionTimer);
-// }
-
-// function startQuizTimer() {
-//     quizTimer = setInterval(() => {
-//         timeRemainingForQuiz--;
-//         if (timeRemainingForQuiz <= 0) {
-//             clearInterval(quizTimer);
-//         }
-//     }, 1000);
-// }
-
-// function startQuestionTimer() {
-//     timeRemainingForQuestion = 10;
-//     questionTimer = setInterval(() => {
-//         timeRemainingForQuestion--;
-//         if (timeRemainingForQuestion <= 0) {
-//             clearInterval(questionTimer);
-//         }
-//     }, 1000);
-// }
-
-// function getCurrentQuestion() {
-//     if (currentQuestionIndex < questions.length) {
-//         startQuestionTimer();
-//         return {
-//             question: questions[currentQuestionIndex].question,
-//             timeRemainingForQuestion,
-//             timeRemainingForQuiz,
-//             currentQuestionIndex: currentQuestionIndex + 1,
-//             totalQuestions: questions.length
-//         };
-//     } else {
-//         return null;
-//     }
-// }
-
-// function checkAnswer(answer) {
-//     clearInterval(questionTimer);
-//     const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
-//     const isCorrect = answer.toLowerCase() === correctAnswer;
-//     if (isCorrect) {
-//         score++;
-//     }
-//     currentQuestionIndex++;
-//     return {
-//         message: isCorrect ? 'Correct!' : 'Wrong answer!',
-//         score,
-//         currentQuestionIndex,
-//     };
-// }
-
-// const server = http.createServer((req, res) => {
-//     const parsedUrl = url.parse(req.url, true);
-//     const method = req.method;
-
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-//     if (method === 'OPTIONS') {
-//         res.writeHead(204);
-//         res.end();
-//         return;
-//     }
-
-//     if (parsedUrl.pathname === '/start' && method === 'GET') {
-//         resetQuiz();
-//         startQuizTimer();
-//         const questionData = getCurrentQuestion();
-//         res.writeHead(200, { 'Content-Type': 'application/json' });
-//         res.end(JSON.stringify(questionData));
-//     } else if (parsedUrl.pathname === '/question' && method === 'GET') {
-//         const questionData = getCurrentQuestion();
-//         if (questionData) {
-//             res.writeHead(200, { 'Content-Type': 'application/json' });
-//             res.end(JSON.stringify(questionData));
-//         } else {
-//             res.writeHead(200, { 'Content-Type': 'application/json' });
-//             res.end(JSON.stringify({ message: 'Quiz finished!', finalScore: score, totalQuestions: questions.length }));
-//         }
-//     } else if (parsedUrl.pathname === '/answer' && method === 'POST') {
-//         let body = '';
-//         req.on('data', (chunk) => {
-//             body += chunk.toString();
-//         });
-
-//         req.on('end', () => {
-//             const answer = JSON.parse(body).answer;
-//             const result = checkAnswer(answer);
-//             res.writeHead(200, { 'Content-Type': 'application/json' });
-//             res.end(JSON.stringify(result));
-//         });
-//     } else if (parsedUrl.pathname === '/end' && method === 'GET') {
-//         clearInterval(quizTimer);
-//         clearInterval(questionTimer);
-//         res.writeHead(200, { 'Content-Type': 'application/json' });
-//         res.end(JSON.stringify({ message: 'Quiz finished!', finalScore: score, totalQuestions: questions.length }));
-//         resetQuiz();
-//     } else {
-//         res.writeHead(404, { 'Content-Type': 'text/plain' });
-//         res.end('Page Not Found');
-//     }
-// });
-
-// server.listen(3000, () => {
-//     console.log('Quiz server running on port 3000');
-// });
-//   curl http://localhost:3000/start
-//  curl -X POST http://localhost:3000/answer -H "Content-Type: application/json" -d '{"answer": "paris"}'
-
-
 
 
 //readline-sync does not work properly
@@ -253,117 +116,204 @@
 
 // startQuiz();
 
-
-
-
 const readline = require('readline');
 
 const questions = [
-  { question: "What is the name of Harry Potter's godfather?", answer: "sirius black" },
-  { question: "Which house at Hogwarts was Harry a part of?", answer: "gryffindor" },
-  { question: "What position does Harry play on the Quidditch team?", answer: "seeker" },
-  { question: "What magical object did Harry use to breathe underwater?", answer: "gillyweed" },
-  { question: "What is the name of the three-headed dog guarding the Philosopher's Stone?", answer: "fluffy" },
+  {
+    question: "What is the name of Harry Potter's godfather?",
+    choices: ['Remus Lupin', 'Sirius Black', 'Arthur Weasley', 'Albus Dumbledore'],
+    correctIndex: 1
+  },
+  {
+    question: "Which house at Hogwarts was Harry a part of?",
+    choices: ['Slytherin', 'Hufflepuff', 'Ravenclaw', 'Gryffindor'],
+    correctIndex: 3
+  },
+  {
+    question: "What position does Harry play on the Quidditch team?",
+    choices: ['Keeper', 'Chaser', 'Seeker', 'Beater'],
+    correctIndex: 2
+  },
+  {
+    question: "What magical object did Harry use to breathe underwater?",
+    choices: ['Gillyweed', 'Bubble-Head Charm', 'Breathing Potion', 'Transfiguration Spell'],
+    correctIndex: 0
+  },
+  {
+    question: "What is the name of the three-headed dog guarding the Philosopher's Stone?",
+    choices: ['Fang', 'Fluffy', 'Norbert', 'Aragog'],
+    correctIndex: 1
+  }
 ];
 
-const timePerQuestion = 10;
-const totalQuizTime = 30;
-let currentQuestionIndex = 0;
-let score = 0;
-let quizTimer;
-let questionTimer;
+class QuizGame {
+  constructor() {
+    this.timePerQuestion = 10;
+    this.totalQuizTime = 30;
+    this.currentQuestionIndex = 0;
+    this.score = 0;
+    this.quizTimer = null;
+    this.questionTimer = null;
+    this.isQuizActive = false;
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+    this.rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+  }
 
-function clearLine() {
-  process.stdout.write('\r\x1b[K');
-}
-
-function startQuestionTimer(onTimeout) {
-  let timeRemaining = timePerQuestion;
-  questionTimer = setInterval(() => {
-    clearLine();
-    process.stdout.write(`Time remaining: ${timeRemaining}s | Your answer: `);
-    timeRemaining--;
-    if (timeRemaining < 0) {
-      clearInterval(questionTimer);
-      console.log('\nTime\'s up!');
-      onTimeout();
+  clearLines(n = 1) {
+    for (let i = 0; i < n; i++) {
+      process.stdout.moveCursor(0, -1);
+      process.stdout.clearLine(1);
     }
-  }, 1000);
-}
+  }
 
-function startQuizTimer() {
-  let totalTimeRemaining = totalQuizTime;
-  quizTimer = setInterval(() => {
-    clearLine();
-    process.stdout.write(`Total quiz time remaining: ${totalTimeRemaining}s`);
-    totalTimeRemaining--;
-    if (totalTimeRemaining < 0) {
-      clearInterval(quizTimer);
-      console.log('\nQuiz time is up!');
-      endQuiz();
+  displayChoices(choices) {
+    const letters = ['A', 'B', 'C', 'D'];
+    choices.forEach((choice, index) => {
+      console.log(`${letters[index]}) ${choice}`);
+    });
+  }
+
+  isValidChoice(input) {
+    return ['a', 'b', 'c', 'd'].includes(input.toLowerCase());
+  }
+
+  convertLetterToIndex(letter) {
+    return {'a': 0, 'b': 1, 'c': 2, 'd': 3}[letter.toLowerCase()];
+  }
+
+  startQuestionTimer() {
+    let timeRemaining = this.timePerQuestion;
+    
+    if (this.questionTimer) {
+      clearInterval(this.questionTimer);
     }
-  }, 1000);
-}
 
-function askQuestion() {
-  const currentQuestion = questions[currentQuestionIndex];
-  console.log(`\nQuestion ${currentQuestionIndex + 1}: ${currentQuestion.question}`);
+    console.log(); // Empty line for timer
+    console.log("Your answer (A/B/C/D): "); // Line for input
 
-  let answerGiven = false;
+    return new Promise((resolve) => {
+      this.questionTimer = setInterval(() => {
+        if (this.isQuizActive) {
+          this.clearLines(2);
+          console.log(`Time remaining: ${timeRemaining}s`);
+          console.log("Your answer (A/B/C/D): ");
+          timeRemaining--;
+          
+          if (timeRemaining < 0) {
+            clearInterval(this.questionTimer);
+            console.log('\nTime\'s up for this question!');
+            resolve('timeout');
+          }
+        }
+      }, 1000);
+    });
+  }
 
-  startQuestionTimer(() => {
-    if (!answerGiven) {
-      rl.removeAllListeners('line');
-      moveToNextQuestion();
+  startQuizTimer() {
+    let totalTimeRemaining = this.totalQuizTime;
+    
+    this.quizTimer = setInterval(() => {
+      if (totalTimeRemaining <= 0) {
+        this.endQuiz();
+        return;
+      }
+      
+      this.clearLines(1);
+      console.log(`Total quiz time remaining: ${totalTimeRemaining}s`);
+      totalTimeRemaining--;
+    }, 1000);
+  }
+
+  async askQuestion() {
+    if (!this.isQuizActive) return;
+
+    const currentQuestion = questions[this.currentQuestionIndex];
+    console.log(`\nQuestion ${this.currentQuestionIndex + 1}: ${currentQuestion.question}`);
+    this.displayChoices(currentQuestion.choices);
+
+    const timerPromise = this.startQuestionTimer();
+    const answerPromise = new Promise((resolve) => {
+      this.rl.question("", resolve);
+    });
+
+    const result = await Promise.race([timerPromise, answerPromise]);
+
+    if (this.questionTimer) {
+      clearInterval(this.questionTimer);
     }
-  });
 
-  rl.question("Your answer: ", (answer) => {
-    answerGiven = true;
-    clearInterval(questionTimer);
-    clearLine();
-
-    if (answer.trim() === "") {
+    if (result === 'timeout') {
       console.log("No answer provided. Moving to the next question.");
-    } else if (answer.toLowerCase() === currentQuestion.answer) {
-      console.log("Correct!");
-      score++;
     } else {
-      console.log("Wrong answer!");
+      const answer = result.trim().toLowerCase();
+      if (!this.isValidChoice(answer)) {
+        console.log("Invalid choice. Moving to the next question.");
+      } else {
+        const answerIndex = this.convertLetterToIndex(answer);
+        if (answerIndex === currentQuestion.correctIndex) {
+          console.log("Correct! ⚡");
+          this.score++;
+        } else {
+          const correctLetter = ['A', 'B', 'C', 'D'][currentQuestion.correctIndex];
+          console.log(`Wrong answer! The correct answer was ${correctLetter}) ${currentQuestion.choices[currentQuestion.correctIndex]}`);
+        }
+      }
     }
 
-    moveToNextQuestion();
-  });
-}
+    await this.moveToNextQuestion();
+  }
 
-function moveToNextQuestion() {
-  currentQuestionIndex++;
-  if (currentQuestionIndex >= questions.length) {
-    endQuiz();
-  } else {
-    setTimeout(askQuestion, 1000);
+  async moveToNextQuestion() {
+    this.currentQuestionIndex++;
+    if (this.currentQuestionIndex >= questions.length || !this.isQuizActive) {
+      this.endQuiz();
+    } else {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await this.askQuestion();
+    }
+  }
+
+  endQuiz() {
+    this.isQuizActive = false;
+    if (this.quizTimer) clearInterval(this.quizTimer);
+    if (this.questionTimer) clearInterval(this.questionTimer);
+    
+    console.log("\n🎬 The quiz has ended!");
+    console.log(`✨ Your final score is: ${this.score}/${questions.length}`);
+    
+    if (this.score === questions.length) {
+      console.log("🏆 Perfect score! You're a true Potterhead!");
+    } else if (this.score >= questions.length * 0.7) {
+      console.log("🎉 Great job! You really know your Harry Potter!");
+    } else if (this.score >= questions.length * 0.5) {
+      console.log("📚 Not bad! Maybe time for a series reread?");
+    } else {
+      console.log("📖 Looks like you need to brush up on your Harry Potter knowledge!");
+    }
+    
+    this.rl.close();
+  }
+
+  async startQuiz() {
+    console.log("🧙‍♂️ Welcome to the PotterHead Quiz! 🏰");
+    console.log("⚡ The entire quiz will end after 30 seconds, regardless of how many questions you answer.");
+    console.log("🪄 You have 10 seconds to answer each question.");
+    console.log("📝 Answer by typing A, B, C, or D");
+    
+    await new Promise(resolve => {
+      this.rl.question("Press Enter to start the quiz...", resolve);
+    });
+
+    console.log(); // Empty line for timer
+    this.isQuizActive = true;
+    this.startQuizTimer();
+    await this.askQuestion();
   }
 }
 
-function endQuiz() {
-  clearInterval(quizTimer);
-  console.log("\nThe quiz has ended!");
-  console.log(`Your final score is: ${score}/${questions.length}`);
-  rl.close();
-}
-
-function startQuiz() {
-  console.log("Welcome to the PotterHead Quiz!");
-  console.log("The entire quiz will end after 30 seconds, regardless of how many questions you answer.");
-  rl.question("Press Enter to start the quiz...", () => {
-    startQuizTimer();
-    askQuestion();
-  });
-}
-
-startQuiz();
+// Start the quiz
+const quiz = new QuizGame();
+quiz.startQuiz();
